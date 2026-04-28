@@ -8,6 +8,13 @@ app runs frame interpolation on a `MediaProjection` capture and composites
 the generated frames in a system overlay sitting on top of the target game.
 End-to-end frame generation works today on Adreno 7xx-class GPUs and newer.
 
+
+## Video
+
+[LSFG-Android 0.1.0 Test](https://youtu.be/Lx-_b9AJdK0)
+
+
+
 ## Repository layout
 
 | Path | What it is |
