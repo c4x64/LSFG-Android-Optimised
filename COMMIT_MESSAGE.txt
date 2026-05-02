@@ -1,0 +1,11 @@
+feat: Add Hardware Abstraction Layer (HAL) for frame capture backends
+
+This commit introduces a Hardware Abstraction Layer (HAL) for the frame capture system with support for multiple backends including Overlay, Shizuku, and Root-Vulkan-Hook implementations. The HAL enables modular backend selection while maintaining compatibility with upstream builds.
+
+Key features:
+- Abstract interface IFrameCapture with factory pattern for backend creation
+- Conditional compilation support for root features via CMake options
+- Support for Overlay, Shizuku, and Root backends
+- CMake configuration for feature flags
+
+The implementation maintains upstream compatibility through preprocessor guards while enabling enhanced functionality when building with LSFG_ROOT_ENABLED or LSFG_SHIZUKU_ENABLED flags.
