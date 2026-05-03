@@ -1,0 +1,56 @@
+name: Build Android App
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        root_enabled: ["ON", "OFF"]
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          submodules: recursive
+          fetch-depth: 0
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+          cache: 'gradle'
+
+      - name: Setup Android SDK
+        uses: android-actions/setup-android@v3
+
+      - name: Install NDK
+        run: |
+          ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager --install "ndk;27.0.12077973"
+
+      - name: Grant execute permission for gradlew
+        run: chmod +x LSFG-Android-Application/gradlew
+
+      - name: Build with Gradle
+        run: |
+          cd LSFG-Android-Application
+          if [ "${{ matrix.root_enabled }}" == "ON" ]; then
+            echo "Building with Root Features enabled"
+            ./gradlew :app:assembleDebug -Pandroid.externalNativeBuildFlags="-DLSFG_ROOT_ENABLED=ON"
+          else
+            echo "Building standard version"
+            ./gradlew :app:assembleDebug
+          fi
+
+      - name: Upload APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: LSFG-X-debug-root-${{ matrix.root_enabled }}
+          path: LSFG-Android-Application/app/build/outputs/apk/debug/*.apk
