@@ -26,14 +26,9 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          cache: 'gradle'
 
       - name: Setup Android SDK
         uses: android-actions/setup-android@v3
-
-      - name: Install NDK
-        run: |
-          ${ANDROID_SDK_ROOT}/cmdline-tools/latest/bin/sdkmanager --install "ndk;27.0.12077973"
 
       - name: Grant execute permission for gradlew
         run: chmod +x LSFG-Android-Application/gradlew
@@ -43,10 +38,10 @@ jobs:
           cd LSFG-Android-Application
           if [ "${{ matrix.root_enabled }}" == "ON" ]; then
             echo "Building with Root Features enabled"
-            ./gradlew :app:assembleDebug -Pandroid.externalNativeBuildFlags="-DLSFG_ROOT_ENABLED=ON"
+            ./gradlew :app:assembleDebug -Pandroid.externalNativeBuildFlags="-DLSFG_ROOT_ENABLED=ON" --stacktrace
           else
             echo "Building standard version"
-            ./gradlew :app:assembleDebug
+            ./gradlew :app:assembleDebug --stacktrace
           fi
 
       - name: Upload APK
